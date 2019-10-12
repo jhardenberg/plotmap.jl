@@ -157,19 +157,13 @@ end
 
 if style=="contourf"
     data_cyc, lon_cyc = cutil.add_cyclic_point(data, coord=lon)
-else
-    data_cyc=data
-    lon_cyc=lon
-end
-
-if style=="contourf"
     if levels==0 
         contourf(lon_cyc, lat, data_cyc, transform=ccrs.PlateCarree(), cmap=cmap, extend=extend)
     else
         contourf(lon_cyc, lat, data_cyc, transform=ccrs.PlateCarree(), cmap=cmap, levels=levels, extend=extend)
     end
 else
-    pcolormesh(lon_cyc, lat, data_cyc, transform=ccrs.PlateCarree(), cmap=cmap)
+    pcolormesh(lon, lat, data, transform=ccrs.PlateCarree(), cmap=cmap)
 end
 
 if length(titles)>1 title(titles, pad=tpad, fontsize=tfs, weight=tweight) end
