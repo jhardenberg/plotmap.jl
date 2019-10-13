@@ -171,6 +171,7 @@ else
     pcolormesh(lon, lat, data, transform=ccrs.PlateCarree(), cmap=cmap)
 end
 
+if length(cstep)>0 clim(cstep[1],cstep[end]); end
 if length(titles)>1 title(titles, pad=tpad, fontsize=tfs, weight=tweight) end
 cbar=colorbar(orientation=cdir, extend="both", pad=cpad, label=clabel, shrink=cscale)
 cbar.set_label(label=clabel,size=lfs)
