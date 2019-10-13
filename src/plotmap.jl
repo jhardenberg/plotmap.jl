@@ -44,30 +44,16 @@ function plotmap(fname::String, var::String; lon="lon", lat="lat", lonb="lon_bnd
 if style=="pcolormesh"
     try 
         lonb=ncread(fname, lonb);
+        lonv=vcat(lonb[1,:],lonb[2,end])
     catch
-        println("Did not find lon bounds in file, reconstructing")
         lonv=ncread(fname, lon);
-        lonb=zeros(2,length(lonv))
-        lonb[1,2:end]=0.5*(lonv[2:end]+lonv[1:(end-1)])
-        lonb[1,1]=lonv[1]-(lonv[2]-lonv[1])*0.5
-        lonb[2,end]=lonv[end]+(lonv[end]-lonv[end-1])*0.5
     end
     try
         latb=ncread(fname, latb);
+        latv=vcat(latb[1,:],latb[2,end])
     catch
-        println("Did not find lat bounds in file, reconstructing")
         latv=ncread(fname, lat);
-        latb=zeros(2,length(latv))
-        latb[1,2:end]=0.5*(latv[2:end]+latv[1:(end-1)])
-        latb[1,1]=latv[1]-(latv[2]-latv[1])*0.5
-        latb[2,end]=latv[end]+(latv[end]-latv[end-1])*0.5
-        if latb[1,1]>89; latb[1,1]=90 ; end 
-        if latb[1,1]<-89; latb[1,1]=-90 ; end 
-        if latb[2,end]>89; latb[2,end]=90 ; end 
-        if latb[2,end]<-89; latb[2,end]=-90 ; end 
     end
-    lonv=vcat(lonb[1,:],lonb[2,end])
-    latv=vcat(latb[1,:],latb[2,end])
 else
     lonv=ncread(fname, lon);
     latv=ncread(fname, lat);
@@ -122,8 +108,27 @@ function plotmap(lon, lat, data; titles="", cstep=[], cmap="RdBu_r", proj="", cp
 dd = size(data)
 
 if length(dd)==3 data=data[:,:,1] end
-# Needed below for correct plotting
 if style=="pcolormesh"
+    if length(lon) in dd
+        println("pcolormesh needs cell boundaries, reconstructing lon")
+        lonb=zeros(2,length(lon))
+        lonb[1,2:end]=0.5*(lon[2:end]+lon[1:(end-1)])
+        lonb[1,1]=lon[1]-(lon[2]-lon[1])*0.5
+        lonb[2,end]=lon[end]+(lon[end]-lon[end-1])*0.5
+        lon=vcat(lonb[1,:],lonb[2,end])
+    end
+    if length(lat) in dd
+        println("pcolormesh needs cell boundaries, reconstructing lat")
+        latb=zeros(2,length(lat))
+        latb[1,2:end]=0.5*(lat[2:end]+lat[1:(end-1)])
+        latb[1,1]=latv[1]-(lat[2]-lat[1])*0.5
+        latb[2,end]=lat[end]+(lat[end]-lat[end-1])*0.5
+        if latb[1,1]>89; latb[1,1]=90 ; end
+        if latb[1,1]<-89; latb[1,1]=-90 ; end
+        if latb[2,end]>89; latb[2,end]=90 ; end
+        if latb[2,end]<-89; latb[2,end]=-90 ; end
+        lat=vcat(latb[1,:],latb[2,end])
+    end
     if length(lon)==(dd[1]+1) data=data' end
 else
     if length(lon)==dd[1] data=data' end
