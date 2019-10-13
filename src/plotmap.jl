@@ -110,7 +110,7 @@ dd = size(data)
 if length(dd)==3 data=data[:,:,1] end
 if style=="pcolormesh"
     if length(lon) in dd
-        println("pcolormesh needs cell boundaries, reconstructing lon")
+        #println("pcolormesh needs cell boundaries, reconstructing lon")
         lonb=zeros(2,length(lon))
         lonb[1,2:end]=0.5*(lon[2:end]+lon[1:(end-1)])
         lonb[1,1]=lon[1]-(lon[2]-lon[1])*0.5
@@ -118,10 +118,10 @@ if style=="pcolormesh"
         lon=vcat(lonb[1,:],lonb[2,end])
     end
     if length(lat) in dd
-        println("pcolormesh needs cell boundaries, reconstructing lat")
+        #println("pcolormesh needs cell boundaries, reconstructing lat")
         latb=zeros(2,length(lat))
         latb[1,2:end]=0.5*(lat[2:end]+lat[1:(end-1)])
-        latb[1,1]=latv[1]-(lat[2]-lat[1])*0.5
+        latb[1,1]=lat[1]-(lat[2]-lat[1])*0.5
         latb[2,end]=lat[end]+(lat[end]-lat[end-1])*0.5
         if latb[1,1]>89; latb[1,1]=90 ; end
         if latb[1,1]<-89; latb[1,1]=-90 ; end
