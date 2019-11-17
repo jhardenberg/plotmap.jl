@@ -1,5 +1,6 @@
 using PyPlot, PyCall
 using NetCDF
+pyimport_conda("cartopy.crs", "cartopy", "conda-forge")
 	
 """
     plotmap(fname, var; ...)
@@ -17,7 +18,7 @@ Optional:
 - 'lat::String': name of the lat variable ("lat")
 - 'lonb::String': name of the lon bounds variable ("lon_bnds")
 - 'latb::String': name of the lat boundsvariable ("lat_bnds")
-- 'titles':      title string ("")
+- 'title':      title string ("")
 - 'cstep': 	 divisions of the colorbar axis ([])
 - 'cmap':        colormap ("RdBu_r")
 - 'proj':        projection. One of ["platecarree", "robinson", "mollweide"]. Defaults to "platecarree".
@@ -38,7 +39,7 @@ Optional:
 - 'extend':      plot levels outside `levels` range. One of ["neither", "both", "min", "max"]. Default: "neither".
 
 """
-function plotmap(fname::String, var::String; lon="lon", lat="lat", lonb="lon_bnds", latb="lat_bnds", titles="", cstep=[], cmap="RdBu_r", proj="", cpad=0.08, tpad=24, sub=111, clabel="NONE", cdir="horizontal", cscale=0.65, tfs=14, cfs=12, lfs=12, tweight="normal", grid=[60,30], region=(), style="pcolormesh", levels=0, extend="neither")
+function plotmap(fname::String, var::String; lon="lon", lat="lat", lonb="lon_bnds", latb="lat_bnds", title="", cstep=[], cmap="RdBu_r", proj="", cpad=0.08, tpad=24, sub=111, clabel="NONE", cdir="horizontal", cscale=0.65, tfs=14, cfs=12, lfs=12, tweight="normal", grid=[60,30], region=(), style="pcolormesh", levels=0, extend="neither")
 
 # pcolormesh needs cell boundaries
 if style=="pcolormesh"
@@ -63,7 +64,7 @@ data=ncread(fname, var);
 units=ncgetatt(fname, var, "units")
 if clabel=="NONE" clabel=units end
 
-plotmap(lonv, latv, data; titles=titles, cstep=cstep, cmap=cmap, proj=proj, cpad=cpad, tpad=tpad, sub=sub, clabel=clabel, cdir=cdir, cscale=cscale, tfs=tfs, cfs=cfs, lfs=lfs, tweight=tweight, grid=grid, region=region, style=style, levels=levels, extend=extend)
+plotmap(lonv, latv, data; title=title, cstep=cstep, cmap=cmap, proj=proj, cpad=cpad, tpad=tpad, sub=sub, clabel=clabel, cdir=cdir, cscale=cscale, tfs=tfs, cfs=cfs, lfs=lfs, tweight=tweight, grid=grid, region=region, style=style, levels=levels, extend=extend)
 
 end
 
@@ -80,7 +81,7 @@ Optional arguments are available to control the details of the plot.
 - 'lat::Array{Float64,1}' : latitudes
 
 Optional:
-- 'titles':      title string ("")
+- 'title':      title string ("")
 - 'cstep':       divisions of the colorbar axis ([])
 - 'cmap':        colormap ("RdBu_r")
 - 'proj':        projection. One of ["platecarree", "robinson", "mollweide"]. Defaults to "platecarree".
@@ -101,7 +102,7 @@ Optional:
 - 'extend':      plot levels outside `levels` range. One of ["neither", "both", "min", "max"]. Default: "neither".
 
 """
-function plotmap(lon, lat, data; titles="", cstep=[], cmap="RdBu_r", proj="", cpad=0.08, tpad=24, sub=111, clabel="", cdir="horizontal", cscale=0.65, tfs=14, cfs=12, lfs=12, tweight="normal", grid=[60,30], region=(), style="pcolormesh", levels=0, extend="neither")
+function plotmap(lon, lat, data; title="", cstep=[], cmap="RdBu_r", proj="", cpad=0.08, tpad=24, sub=111, clabel="", cdir="horizontal", cscale=0.65, tfs=14, cfs=12, lfs=12, tweight="normal", grid=[60,30], region=(), style="pcolormesh", levels=0, extend="neither")
 
 #cf = pyimport("cartopy.feature")
 
@@ -172,7 +173,7 @@ else
 end
 
 if length(cstep)>0 clim(cstep[1],cstep[end]); end
-if length(titles)>1 title(titles, pad=tpad, fontsize=tfs, weight=tweight) end
+if length(title)>1 PyPlot.title(title, pad=tpad, fontsize=tfs, weight=tweight) end
 cbar=colorbar(orientation=cdir, extend="both", pad=cpad, label=clabel, shrink=cscale)
 cbar.set_label(label=clabel,size=lfs)
 cbar.ax.tick_params(labelsize=cfs) 
