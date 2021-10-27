@@ -1,6 +1,8 @@
 using PyPlot, PyCall
 using NetCDF
 pyimport_conda("cartopy.crs", "cartopy", "conda-forge")
+ssl = pyimport_conda("ssl","ssl")
+ssl._create_default_https_context = ssl._create_unverified_context
 	
 """
     plotmap(fname, var; ...)
