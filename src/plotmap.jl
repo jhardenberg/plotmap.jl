@@ -146,6 +146,14 @@ if proj=="robinson"
 elseif proj == "mollweide"
     proj=ccrs.Mollweide()
     dlabels=false
+elseif proj == "polar_north"
+    proj=ccrs.NorthPolarStereo()
+    region = (-180, 180, 45, 90)
+    dlabels=false
+elseif proj == "polar_south"
+    proj=ccrs.SouthPolarStereo()
+    region = (-180, 180, -90, -45)
+    dlabels=false
 else
     proj=ccrs.PlateCarree()
     dlabels=true
