@@ -140,6 +140,10 @@ ccrs = pyimport("cartopy.crs")
 cutil = pyimport("cartopy.util")
 cfeat = pyimport("cartopy.feature")                  
 
+cm=0
+if length(region)>0
+    cm=(region[1]+region[2])/2
+end
 if proj=="robinson"
     proj=ccrs.Robinson()
     dlabels=false
@@ -155,7 +159,7 @@ elseif proj == "polar_south"
     region = (-180, 180, -90, -45)
     dlabels=false
 else
-    proj=ccrs.PlateCarree()
+    proj=ccrs.PlateCarree(central_longitude=cm)
     dlabels=true
 end
 
